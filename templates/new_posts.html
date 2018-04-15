@@ -7,15 +7,17 @@
     <form action='/newpost' method='post'>
         <div>
             <label for='blog-post'>Title for your new blog:</label>
-            <input type="text" name='post-title' />
+            <input type="text" name='post-title' value='{{request.form['post-title']}}'/>
+            <br />
+            <span class='error'>{{title_error}}</span>
         </div>
         <br>
         <br>
         <div>
             <label for='blog-post2' >Your new blog:</label>
-            <textarea rows='7'  type="text" name='post-body'></textarea>
+            <textarea rows='7'  type="text" name='post-body' value='{{request.form['post-body']}}'></textarea>
+            <span class='error'>{{body_error}}</span>
         </div>
-            <br>
             <br>
             <input type="submit" value='Add Entry' />
     </form>
