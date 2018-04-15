@@ -27,14 +27,8 @@ class Blog(db.Model):
 @app.route('/newpost', methods=['POST', 'GET'])
 def index():
 
-
     if request.method == 'GET':
-        return render_template('new_posts.html', title='Build a Blog App')
-
-
-@app.route('/blog', methods=['POST','GET'])
-def blog_entry():
-
+        return render_template('new_posts.html', title='Add Blog Entry')
 
     if request.method == 'POST':
         post_title = request.form['post-title']
@@ -42,14 +36,19 @@ def blog_entry():
         new_post = Blog(post_title, post_body)
         db.session.add(new_post)
         db.session.commit()
-        return render_template('blog_entry.html', post_title=post_title,
-                                post_body=post_body)
+
+        posts = Blog.query.all()
+        return render_template('blog_entry.html', posts=posts)
+
+
+@app.route('/blog', methods=['POST','GET'])
+def blog_entry():
+
 
     if request.method == 'GET':
         posts = Blog.query.all()
         return render_template('blog_entry.html', title='Build a Blog App',
                                 posts=posts)
-
 
 
 if __name__ == '__main__':
