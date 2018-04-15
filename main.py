@@ -1,5 +1,8 @@
 from flask import Flask, request, redirect, render_template
 from flask_sqlalchemy import SQLAlchemy
+import cgi
+import flask
+#from flask import Session
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -14,29 +17,19 @@ class Blog(db.Model):
     title = db.Column(db.String(120))
     body = db.Column(db.Text(560))
 
-    def __init__(self, name):
+    def __init__(self, title, body):
         self.title = title
         self.body = body
 
-    def __repr__(self):
-        return '<Blog %r>' % self.name
 
 
 
 @app.route('/newpost', methods=['POST', 'GET'])
 def index():
 
-    if request.method == 'POST':
-        post_title = request.form['post-title']
-        post_body = request.form['post-body']
-        new_post = Blog(new_post)
-        db.session.add(new_post_title, new_post_body)
-        db.session.commit()
-
-        return render_template('blog_entry.html', post_title=post_title, post_body=post_body)
 
     if request.method == 'GET':
-        return render_template('new_posts.html')
+        return render_template('new_posts.html', title='Build a Blog App')
 
 
 @app.route('/blog', methods=['POST','GET'])
@@ -46,11 +39,16 @@ def blog_entry():
     if request.method == 'POST':
         post_title = request.form['post-title']
         post_body = request.form['post-body']
-        return render_template('blog_entry.html', post_title=post_title, post_body=post_body)
+        new_post = Blog(post_title, post_body)
+        db.session.add(new_post)
+        db.session.commit()
+        return render_template('blog_entry.html', post_title=post_title,
+                                post_body=post_body)
 
     if request.method == 'GET':
-        post = Blog.query.all()
-        return render_template('blog_entry.html', post=post)
+        posts = Blog.query.all()
+        return render_template('blog_entry.html', title='Build a Blog App',
+                                posts=posts)
 
 
 
