@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 import cgi
 import flask
 
-
 app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:jumpman1@localhost:8889/build-a-blog'
@@ -21,6 +20,8 @@ class Blog(db.Model):
         self.title = title
         self.body = body
 
+    def __repr__(self):
+        return '<Blog %r>' % self.name
 
 
 
@@ -30,9 +31,26 @@ def index():
     if request.method == 'GET':
         return render_template('new_posts.html', title='Add Blog Entry')
 
+
+@app.route('/blog', methods=['POST','GET'])
+def blog_entry():
+
+    if request.method == 'GET':
+        post_id = request.args.get('id')
+
+        if type(post_id) == str:
+            posts = Blog.query.get(post_id)
+            return render_template('view_post.html', title='Blog post #'+ str(post_id),
+                                    posts=posts)
+        else:
+            posts = Blog.query.all()
+            return render_template('blog_entry.html', title='Build a Blog App',
+                                        posts=posts)
+
     if request.method == 'POST':
         post_title = request.form['post-title']
         post_body = request.form['post-body']
+
         if post_title == '':
             title_error = 'Please fill in the title'
             return render_template('new_posts.html', title='Add Blog Entry',
@@ -47,18 +65,7 @@ def index():
             db.session.commit()
 
             posts = Blog.query.all()
-            return render_template('blog_entry.html', posts=posts)
-
-
-@app.route('/blog', methods=['POST','GET'])
-def blog_entry():
-
-
-    if request.method == 'GET':
-        posts = Blog.query.all()
-        return render_template('blog_entry.html', title='Build a Blog App',
-                                posts=posts)
-
+            return render_template('view_post.html', post_title=post_title, post_body=post_body, posts=posts)
 
 if __name__ == '__main__':
     app.run()

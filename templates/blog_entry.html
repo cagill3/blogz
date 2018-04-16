@@ -4,7 +4,7 @@
     <h1 class='top-title' >Build a Blog<h1>
 
 {% for post in posts %}
-    <a href="/blog">{{post.title}}</a>
+    <a class='blog-id' href="/blog?id={{post.id}}">{{post.title}}</a>
     <p>{{post.body}}</p>
     <hr />
 {% endfor %}
