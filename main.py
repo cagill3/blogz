@@ -52,20 +52,25 @@ def blog_entry():
         post_body = request.form['post-body']
 
         if post_title == '':
-            title_error = 'Please fill in the title'
-            return render_template('new_posts.html', title='Add Blog Entry',
-                                    title_error=title_error)
+            title_error = title_error = 'Please fill in the title'
+        else:
+            title_error = ''
         if post_body == '':
             body_error = 'Please fill in the body'
-            return render_template('new_posts.html', title='Add Blog Entry',
-                                    body_error=body_error)
         else:
+            body_error = ''
+
+        if title_error == '' and body_error == '':
+
             new_post = Blog(post_title, post_body)
             db.session.add(new_post)
             db.session.commit()
+            id= str(new_post.id)
+            return redirect('/blog?id=' + id)
 
-            posts = Blog.query.all()
-            return render_template('view_post.html', post_title=post_title, post_body=post_body, posts=posts)
+        else:
+            return render_template('new_posts.html', title_error=title_error, body_error=body_error)
+
 
 if __name__ == '__main__':
     app.run()
