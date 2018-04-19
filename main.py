@@ -47,39 +47,6 @@ def signup():
         verify = request.form['verify']
 
         #TODO validate user's data
-        '''username_error = ''
-        password_error = ''
-        verify_error = ''
-
-
-
-        if username == '':
-            username_error = 'You must enter a username!'
-        if ' ' in username:
-            username_error = 'username cannot contain a space'
-        if len(username) < 3 or len(username)  > 20:
-            username_error = 'username length must be between 3 and 20 characters'
-            username = ''
-
-        if password == '':
-            password_error ='You must enter a password'
-            password = ''
-
-        if len(password) < 3 or len(password) > 20:
-            password_error = 'password length must be between 3 and 20 characters'
-            username = ''
-
-        if verify == '':
-            verify_error = 'You must verify password. Re-enter password'
-            verify = ''
-        if verify != password:
-            verify_error = 'Passwords do not match.  Please verify password'
-            verify = ''
-
-        if not username_error and not password_error and not verify:
-            return redirect('/newpost')
-        else:
-            return redirect('/signup')'''
 
         existing_user = User.query.filter_by(username=username).first()
         if not existing_user:
@@ -87,7 +54,7 @@ def signup():
             db.session.add(new_user)
             db.session.commit()
 
-            return redirect('/')
+            return redirect('/newpost')
 
         else:
             return "<h1>Duplicate User</h1>"
@@ -109,7 +76,8 @@ def login():
             #TODO why login failed
             return '<h1>Error!</h2>'
 
-    return render_template('login.html')
+    if request.method == 'GET':
+        return render_template('login.html')
 
 
 @app.route('/', methods=['GET'])
@@ -129,14 +97,7 @@ def newpost():
         return render_template('new_posts.html', title='Add Blog Entry')
 
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        blogs = ''
-        new_user = User(username, password, blogs)
-        print('***********************1111111111111***************************************')
-        db.session.add(new_user)
-        db.session.commit()
-        return render_template('new_posts.html')
+        return render_template('new_posts.html', title='Add Blog Entry')
 
 
 @app.route('/blog', methods=['POST','GET'])
