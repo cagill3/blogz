@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template, flash
+from flask import Flask, request, redirect, render_template, flash, session
 from flask_sqlalchemy import SQLAlchemy
 import cgi
 import flask
@@ -17,10 +17,10 @@ class Blog(db.Model):
     body = db.Column(db.Text(560))
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    def __init__(self, title, body, user):
+    def __init__(self, title, body, owner):
         self.title = title
         self.body = body
-        self.user = user
+        self.owner = owner
 
     def __repr__(self):
         return '<Blog %r>' % self.name
@@ -29,6 +29,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120))
     password = db.Column(db.String(120))
+    blogs = db.relationship('Blog', backref='owner')
 
     def __init__(self, username, password):
         self.username = username
@@ -53,7 +54,7 @@ def signup():
             new_user = User(username, password)
             db.session.add(new_user)
             db.session.commit()
-
+            session['username'] = username
             return redirect('/newpost')
 
         else:
@@ -70,7 +71,7 @@ def login():
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
         if user and user.password == password:
-            #TODO remember user has logged in
+            session['username'] = username
             return redirect('/newpost')
         else:
             #TODO why login failed
@@ -85,8 +86,15 @@ def index():
     return render_template('index.html')
 
 
+#@app.before_request
+#def require_login():
+    #if username not in session:
+        #return redirect('/login')
+
+
 @app.route('/logout', methods=['POST'])
 def logout():
+    del session['email']
     return redirect('/blog')
 
 
@@ -118,6 +126,7 @@ def blog_entry():
     if request.method == 'POST':
         post_title = request.form['post-title']
         post_body = request.form['post-body']
+        owner = request.form['owner-id']
 
         if post_title == '':
             title_error = title_error = 'Please fill in the title'
@@ -130,7 +139,7 @@ def blog_entry():
 
         if title_error == '' and body_error == '':
 
-            new_post = Blog(post_title, post_body, user)
+            new_post = Blog(post_title, post_body, owner)
             db.session.add(new_post)
             db.session.commit()
             id= str(new_post.id)
