@@ -29,7 +29,7 @@ class Blog(db.Model):
 class User(db.Model):
     '''creates User table in DB'''
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(120))
+    username = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(120))
     blogs = db.relationship('Blog', backref='owner')
 
@@ -59,8 +59,8 @@ def login():
             session['username'] = username
             return redirect('/newpost')
         else:
-            #TODO why login failed
-            return '<h1>Error!</h2>'
+            no_user = 'User does not exist. Signup!'
+            return render_template('signup.html', error=no_user)
 
     if request.method == 'GET':
         return render_template('login.html', title='Blogz')
@@ -121,17 +121,26 @@ def newpost():
         if request.method == 'GET':
             return render_template('new_posts.html', title='Blogz')
 
+#@app.route('/single-user')
+#def single_User():
+#    owner = request.args.get(id)
+#    posts = User.query.filter_by(blogs=owner).all()
+#    return render_template('single_User.html', posts=posts)
+
 @app.route('/blog', methods=['POST','GET'])
 def blog_entry():
 
         if request.method == 'GET':
             post_id = request.args.get('id')
-
             if type(post_id) == str:
                 posts = Blog.query.get(post_id)
                 return render_template('view_post.html', title='Blogz'+ str(post_id),
                                         posts=posts)
             #TODO need another if statement to render single_User.html template
+            #username = User.query.all()
+            #if request.args in username:
+                #posts = Blog.query.filter_by(username=username).all()
+                #return render_template('single_User.html', posts=posts)
             else:
                 posts = Blog.query.all()
                 return render_template('blog_entry.html', title='Blogz',
