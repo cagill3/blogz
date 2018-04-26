@@ -90,8 +90,11 @@ def signup():
 
 @app.route('/logout')
 def logout():
-    del session['username']
-    return redirect('/blog')
+    if 'username' in session:
+        del session['username']
+        return redirect('/blog')
+    else:
+        return redirect('/blog')
 
 @app.route('/', methods=['GET'])
 def index():

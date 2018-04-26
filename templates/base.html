@@ -46,10 +46,9 @@
 
         </style>
         {% if 'username' in session %}
-        {{ session['username'] }}
-        <p>button</p>
+        <p>Hello, {{ session['username'] }}!</p>
         {% else %}
-        logoutt
+        <p>No one currently logged in</p>
         {% endif %}
         <title>{{title}}</title>
     </head>
