@@ -125,10 +125,8 @@ def newpost():
 @app.route('/blogs')
 def single_User():
     owner = request.args.get('user')
-    print("*****************************************First"+str(owner)+"*************************************************")
     user = User.query.filter_by(username=owner).first()
     blogs = Blog.query.filter_by(owner=user).all()
-    print("*****************************************Second"+str(blogs)+"*************************************************")
     return render_template('single_User.html', blogs=blogs, user=user)
 
 @app.route('/blog', methods=['POST','GET'])
@@ -136,10 +134,6 @@ def blog_entry():
 
         if request.method == 'GET':
             post_id = request.args.get('id')
-            print("******************************************************************************************")
-            print("******************************************************************************************")
-            print("******************************************************************************************")
-            print("******************************************************************************************")
 
             if type(post_id) == str:
                 posts = Blog.query.get(post_id)
@@ -147,13 +141,8 @@ def blog_entry():
                 if post_id in post_users:
                     posts = User.query.filter_by(username=post_id).first()
                     return render_template('single_User.html', posts=posts)
-            #TODO need another if statement to render single_User.html template
             else:
                 posts = Blog.query.all()
-                print("******************************************************************************************")
-                print("******************************************************************************************")
-                print("******************************************************************************************")
-                print("******************************************************************************************")
                 return render_template('blog_entry.html', title='Blogz',
                                             posts=posts)
 
