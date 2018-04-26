@@ -2,8 +2,12 @@
 <html>
     <head>
         <style type='text/css'>
-            .error {
+            .error, .logged-out{
                 color: red;
+                font-style: italic;
+            }
+            .logged-in{
+                color: green;
                 font-style: italic;
             }
             .link1{
@@ -46,9 +50,9 @@
 
         </style>
         {% if 'username' in session %}
-        <p>Hello, {{ session['username'] }}!</p>
+        <p class='logged-in'>{{ session['username'] }} is logged in</p>
         {% else %}
-        <p>No one currently logged in</p>
+        <p class='logged-out'>No user currently logged into Blogz</p>
         {% endif %}
         <title>{{title}}</title>
     </head>

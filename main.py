@@ -63,7 +63,7 @@ def login():
             return '<h1>Error!</h2>'
 
     if request.method == 'GET':
-        return render_template('login.html')
+        return render_template('login.html', title='Blogz')
 
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
@@ -86,7 +86,7 @@ def signup():
             return "<h1>Duplicate User</h1>"
 
     if request.method == 'GET':
-        return render_template('signup.html')
+        return render_template('signup.html', title='Blogz')
 
 @app.route('/logout')
 def logout():
@@ -101,13 +101,13 @@ def index():
     if request.method == 'GET':
         users = User.query.all()
         posts = Blog.query.all()
-    return render_template('index.html', title='Blogz Home', users=users, posts=posts)
+    return render_template('index.html', title='Blogz', users=users, posts=posts)
 
 @app.route('/newpost', methods=['POST', 'GET'])
 def newpost():
 
         if request.method == 'GET':
-            return render_template('new_posts.html', title='Add Blog Entry')
+            return render_template('new_posts.html', title='Blogz')
 
 @app.route('/blog', methods=['POST','GET'])
 def blog_entry():
@@ -117,11 +117,12 @@ def blog_entry():
 
             if type(post_id) == str:
                 posts = Blog.query.get(post_id)
-                return render_template('view_post.html', title='Blog post #'+ str(post_id),
+                return render_template('view_post.html', title='Blogz'+ str(post_id),
                                         posts=posts)
+            #TODO need another if statement to render single_User.html template
             else:
                 posts = Blog.query.all()
-                return render_template('blog_entry.html', title='Build a Blog App',
+                return render_template('blog_entry.html', title='Blogz',
                                             posts=posts)
 
         if request.method == 'POST':
@@ -143,10 +144,10 @@ def blog_entry():
                 db.session.add(new_post)
                 db.session.commit()
                 id= str(new_post.id)
-                return redirect('/blog?id=' + id)
+                return redirect('/blog?id=' + id, )
 
             else:
-                return render_template('new_posts.html', title_error=title_error, body_error=body_error)
+                return render_template('new_posts.html', title='Blogz', title_error=title_error, body_error=body_error)
 
 if __name__ == '__main__':
     app.run()

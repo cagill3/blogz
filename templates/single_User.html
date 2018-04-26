@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>{{title.title}}</h2>
-    <p>{{body.title}}</p>
-    <h6>written by <em>{{user}}</em></h6>
+{% for post in posts %}
+    <h1 class='top-title'>{{post.title}}</h1>
+    <p>{{post.body}}</p>
+    <em><h6>written by <a href='/blog?id={{user}}' >{{user}}</a></h6></em>
+{% endfor %}
 {% endblock %}
