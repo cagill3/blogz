@@ -6,7 +6,7 @@
 {% for post in posts %}
     <h2><a class='blog-id' href="/blog?id={{post.id}}">{{post.title}}</a></h2>
     <p>{{post.body}}</p>
-    <em><h6>written by <a href='/blog?id={{post.owner.username}}' >{{post.owner.username}}</a></h6></em>
+    <em><h6>written by <a href='/blogs?user={{post.owner.username}}' >{{post.owner.username}}</a></h6></em>
     <br>
 {% endfor %}
 

@@ -110,10 +110,11 @@ def logout():
 
 @app.route('/', methods=['GET'])
 def index():
-    if request.method == 'GET':
-        users = User.query.all()
-        posts = Blog.query.all()
+    users = User.query.all()
+    posts = Blog.query.all()
     return render_template('index.html', title='Blogz', users=users, posts=posts)
+
+
 
 @app.route('/newpost', methods=['POST', 'GET'])
 def newpost():
@@ -121,28 +122,38 @@ def newpost():
         if request.method == 'GET':
             return render_template('new_posts.html', title='Blogz')
 
-#@app.route('/single-user')
-#def single_User():
-#    owner = request.args.get(id)
-#    posts = User.query.filter_by(blogs=owner).all()
-#    return render_template('single_User.html', posts=posts)
+@app.route('/blogs')
+def single_User():
+    owner = request.args.get('user')
+    print("*****************************************First"+str(owner)+"*************************************************")
+    user = User.query.filter_by(username=owner).first()
+    blogs = Blog.query.filter_by(owner=user).all()
+    print("*****************************************Second"+str(blogs)+"*************************************************")
+    return render_template('single_User.html', blogs=blogs)
 
 @app.route('/blog', methods=['POST','GET'])
 def blog_entry():
 
         if request.method == 'GET':
             post_id = request.args.get('id')
+            print("******************************************************************************************")
+            print("******************************************************************************************")
+            print("******************************************************************************************")
+            print("******************************************************************************************")
+
             if type(post_id) == str:
                 posts = Blog.query.get(post_id)
-                return render_template('view_post.html', title='Blogz'+ str(post_id),
-                                        posts=posts)
+                return render_template('view_post.html', posts=posts)
+                if post_id in post_users:
+                    posts = User.query.filter_by(username=post_id).first()
+                    return render_template('single_User.html', posts=posts)
             #TODO need another if statement to render single_User.html template
-            #username = User.query.all()
-            #if request.args in username:
-                #posts = Blog.query.filter_by(username=username).all()
-                #return render_template('single_User.html', posts=posts)
             else:
                 posts = Blog.query.all()
+                print("******************************************************************************************")
+                print("******************************************************************************************")
+                print("******************************************************************************************")
+                print("******************************************************************************************")
                 return render_template('blog_entry.html', title='Blogz',
                                             posts=posts)
 
