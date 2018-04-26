@@ -71,8 +71,19 @@ def signup():
         username = request.form['username']
         password = request.form['password']
         verify = request.form['verify']
+        if username == '':
+            no_username = "You must enter a username"
+            return render_template('signup.html', user_error=no_username)
+        if password == '':
+            no_password = "You must enter a password"
+            return render_template('signup.html', pw_error=no_password)
+        if verify == '':
+            not_verified = "You must verify password"
+            return render_template('signup.html', vfy_error=not_verified)
+        if password != verify:
+            no_match = "passwords don't match"
+            return render_template('signup.html', match_error=no_match)
 
-        #TODO validate user's data
 
         existing_user = User.query.filter_by(username=username).first()
         if not existing_user:
@@ -82,8 +93,9 @@ def signup():
             session['username'] = username
             return redirect('/newpost')
 
-        else:
-            return "<h1>Duplicate User</h1>"
+        if existing_user:
+            user_exists = 'Username already taken!'
+            return render_template('signup.html', error=user_exists)
 
     if request.method == 'GET':
         return render_template('signup.html', title='Blogz')
