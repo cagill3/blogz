@@ -129,7 +129,7 @@ def single_User():
     user = User.query.filter_by(username=owner).first()
     blogs = Blog.query.filter_by(owner=user).all()
     print("*****************************************Second"+str(blogs)+"*************************************************")
-    return render_template('single_User.html', blogs=blogs)
+    return render_template('single_User.html', blogs=blogs, user=user)
 
 @app.route('/blog', methods=['POST','GET'])
 def blog_entry():
