@@ -2,7 +2,7 @@
 
 {% block content %}
 {% for post in blogs %}
-    <h1 class='top-title'>{{post.title}}</h1>
+    <a href='/blog?id={{post.id}}'>{{post.title}}</a>
     <p>{{post.body}}</p>
     <em><h6>written by <a href='/blog?id={{user}}' >{{user.username}}</a></h6></em>
 {% endfor %}
